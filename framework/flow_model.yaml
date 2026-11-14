@@ -1,0 +1,244 @@
+# 作者：vick 邮箱：ykun@yk9811.com
+
+version: 2
+states:
+  - 未开始
+  - 进行中
+  - 已送审
+  - 完成（审核通过）
+transitions:
+  未开始: [进行中]
+  进行中: [已送审]
+  已送审: ["完成（审核通过）", 进行中]
+  完成（审核通过）: [进行中]
+# 阶段号与分阶段裁决表标题（唯一事实源）。停点用 `stage:` 指向这里：阶段号只决定
+# D 号前缀（`D<阶段>-NNN`）与分阶段裁决表的分组，与停点号无关；新增阶段在这里加一行，
+# 状态的分桶与渲染跟着模型走。声明序即分阶段裁决表的顺序。
+stages:
+  0: STEP0 信息输入
+  1: STEP1 处理流程梳理
+  2: STEP2 系统方案
+  3: STEP3 系统详细设计
+  5: 编码与验证
+# 里程碑。"待里程碑"是派生显示态（停点内部仍是
+# "已送审"），不进 states。terminal: true 表示要终端照抄（只 M3）。
+milestones:
+  - id: M1
+    name: 方案确认
+    covers: [1, 2, 3]
+    blocks: [4]
+    terminal: false
+  - id: M2
+    name: 规格冻结
+    covers: [4, 5, 6]
+    blocks: [7]
+    terminal: false
+  - id: M3
+    name: 签核放行
+    covers: [7, 8, 9, 10, 11, 12]
+    blocks: []
+    terminal: true
+# 动作策略表（唯一事实源）。hosts 渲染时生成本表进 AGENTS.md 与两张主持卡，
+# 规则正文只引用不重复。class 取值：auto / decision / milestone / redline。
+# requires 是动作执行的前提标识，引擎按动作表的 requires 经 policy.require 执行；redline 永不自动。
+actions:
+  # stops 是机器可读的停点归属：引擎按这里判定"该停点自动完成还是由
+  # 里程碑完成"，不许在代码里另写常量。两表合起来正好覆盖行 1–12。
+  - id: stop_done_auto
+    name: 停点送完成（自动归属，逐行见停点总表）
+    class: auto
+    requires: [gate_pass, no_blocking, no_open_item, review_record]
+    stops: [1, 2, 3, 4, 5, 7, 8, 9, 10]
+  - id: stop_done_milestone
+    name: 停点送完成（里程碑归属，逐行见停点总表）
+    class: milestone
+    stops: [6, 11, 12]
+  - id: decision_directional
+    name: 方向/数值裁决的入库、改写、撤回
+    class: redline
+  - id: decision_record
+    name: 记录类裁决的入库、改写
+    class: auto
+  - id: review_record
+    name: 停点/模块审查记录
+    class: auto
+    requires: [author_ne_reviewer, blocking_zero]
+  - id: waive_add
+    name: 豁免
+    class: auto
+    requires: [decision_exists_directional]
+  - id: problem_close
+    name: 关闭阻断问题
+    class: auto
+    requires: [evidence_exists_later]
+  - id: problem_close_tradeoff
+    name: 关闭需要取舍的阻断问题
+    class: redline
+  - id: item_end
+    name: 调试事项闭合
+    class: auto
+  - id: debug_fix_l0_l1
+    name: 调试定修法 L0/L1
+    class: auto
+  - id: debug_fix_l2_l3
+    name: 调试回修升级 L2/L3
+    class: decision
+  - id: allow_violation
+    name: 带违例送审
+    class: redline
+    requires: [decision_id]
+  - id: cov_threshold_down
+    name: 下调覆盖率阈值
+    class: redline
+    requires: [decision_id]
+  - id: marks_harvest
+    name: 走查标记收割
+    class: auto
+  - id: git_snapshot
+    name: 停点完成或里程碑通过后的 git 快照
+    class: auto
+  - id: dispatch_batch
+    name: 行 7 派工分批范围
+    class: auto
+  - id: sdc_constraints
+    name: SDC 约束
+    class: decision
+  - id: milestone_confirm
+    name: 里程碑确认
+    class: redline
+  - id: flow_policy_change
+    name: 修改动作策略表或里程碑定义
+    class: redline
+  - id: multi_sys_pick
+    name: 多子系统在途时的消歧选择
+    class: decision
+stops:
+  # stage: 阶段号，指向上面 stages: 表（D 号前缀与分阶段裁决表分组，不写死停点号）。
+  # review: 该停点的独立审查要求，引擎按本字段判（flow.stop_review，不再写死停点号）：
+  #   spec_review            停点级 spec_review，绑停点产物指纹；
+  #   tb_review              TB 构建的停点级独立审查，绑停点产物指纹；
+  #   rtl_review_per_module  逐模块 rtl_review，绑模块摘要（含 include 链）；
+  #   rtl_review             顶层 rtl_review，绑停点产物指纹；
+  #   none                   不需要审查记录，审查就是闸门与运行记录本身。
+  # blocked_by_items: 存在在途调试事项时是否挡该停点送审（true 即挡）。
+  - id: 1
+    step: STEP0
+    name: 信息输入
+    stage: 0
+    depends_on: []
+    role: step0_info_input
+    gates: [numeric, docs]
+    review: spec_review
+    blocked_by_items: false
+    product: info_input/{sys}_info_overview.md
+  - id: 2
+    step: STEP1
+    name: 处理流程梳理
+    stage: 1
+    depends_on: [1]
+    role: step1_sys_flow
+    gates: [numeric, docs]
+    review: spec_review
+    blocked_by_items: false
+    product: flow_doc/{sys}_flow.md
+  - id: 3
+    step: STEP2
+    name: 系统方案
+    stage: 2
+    depends_on: [2]
+    role: step2_sys_plan
+    gates: [numeric, docs]
+    review: spec_review
+    blocked_by_items: false
+    product: plan_doc/{sys}_plan.md
+  - id: 4
+    step: STEP3-3-1
+    name: 接口定义
+    stage: 3
+    depends_on: [3]
+    role: step3_sys_spec
+    gates: [numeric, docs]
+    review: spec_review
+    blocked_by_items: false
+    product: spec_doc/{sys}_spec.md
+  - id: 5
+    step: STEP3-3-2
+    name: 结构生成
+    stage: 3
+    depends_on: [4]
+    role: step3_module_spec
+    gates: [numeric, docs]
+    review: spec_review
+    blocked_by_items: false
+    product: spec_doc/
+  - id: 6
+    step: STEP3-3-3
+    name: 逻辑块设计
+    stage: 3
+    depends_on: [5]
+    role: step3_module_spec
+    gates: [numeric, docs]
+    review: spec_review
+    blocked_by_items: false
+    product: spec_doc/
+  - id: 7
+    step: 编码
+    name: 模块 RTL
+    stage: 5
+    depends_on: [6]
+    role: spec2rtl
+    gates: [numeric, lint, rtl]
+    review: rtl_review_per_module
+    blocked_by_items: true
+    product: rtl/
+  - id: 8
+    step: 编码
+    name: 顶层 wrapper
+    stage: 5
+    depends_on: [4, 7]
+    role: sys_spec2rtl
+    gates: [conn]
+    review: rtl_review
+    blocked_by_items: true
+    product: rtl/{sys}_top.sv
+  - id: 9
+    step: 验证
+    name: TB 构建
+    stage: 5
+    depends_on: [6, 8]
+    role: tb_build
+    gates: [tc]
+    # 行 9 的独立审查是 tb_review，与 tc 闸门并列（卡见 rules/review/tb.md）。
+    review: tb_review
+    blocked_by_items: true
+    product: testbench/
+  - id: 10
+    step: 验证
+    name: 仿真回归
+    stage: 5
+    depends_on: [7, 8, 9]
+    role: rtl_sim
+    gates: [sim, coverage]
+    review: none
+    blocked_by_items: true
+    product: work/
+  - id: 11
+    step: 中端
+    name: 综合/STA
+    stage: 5
+    depends_on: [7, 8]
+    role: midend_flow
+    gates: [synth, sta]
+    review: none
+    blocked_by_items: true
+    product: dc/
+  - id: 12
+    step: 中端
+    name: 中端签核
+    stage: 5
+    depends_on: [10, 11]
+    role: midend_flow
+    gates: [signoff]
+    review: none
+    blocked_by_items: true
+    product: signoff/{sys}_signoff.md

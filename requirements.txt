@@ -1,0 +1,4 @@
+pyyaml
+# 可选：pyslang（RTL 端口真值解析，framework/rtlports.py）。装了用 AST 求值，
+# 参数化位宽也能算实值；没装回退正则解析（tb-gen 端口校验降级提示，不阻断）。
+# pyslang

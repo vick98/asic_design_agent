@@ -1,0 +1,16 @@
+# 作者：vick 邮箱：ykun@yk9811.com
+
+id: _template
+title: 空剖面
+transport: local
+ssh_alias: ""
+local_root: ""
+mirror_root: ""
+tools:
+  sim: {available: false}
+  lint: {available: false}
+  coverage: {available: false}
+  synth: {available: false}
+  sta: {available: false}
+  cdc: {available: false}
+  lec: {available: false}

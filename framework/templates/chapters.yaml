@@ -1,0 +1,59 @@
+# 作者：vick 邮箱：ykun@yk9811.com
+
+documents:
+  - id: step0
+    folder: info_input
+    stop_min: 1
+    chapters: [输入文档, 可信度, 冲突, 红线五问]
+  - id: step1
+    folder: flow_doc
+    stop_min: 2
+    chapters: [输入输出, 步骤, 节点表, 运算定点化图, 边界点]
+  - id: step2
+    folder: plan_doc
+    stop_min: 3
+    chapters: [模块划分, 模块类型, 前后级与交互]
+  - id: sys_spec
+    folder: spec_doc
+    kind: sys
+    stop_min: 4
+    chapters: [子系统功能, 端口表, 寄存器, 模块摘要]
+  - id: leaf_iface
+    folder: spec_doc
+    kind: leaf
+    stop_min: 4
+    stop_max: 4
+    chapters: [模块功能, 模块接口, 模块处理流程]
+  - id: leaf_struct
+    folder: spec_doc
+    kind: leaf
+    stop_min: 5
+    stop_max: 5
+    chapters: [模块功能, 模块接口, 模块处理流程, 组成模块, 模块连接关系, 模块实现结构]
+  - id: leaf_full
+    folder: spec_doc
+    kind: leaf
+    stop_min: 6
+    chapters: [模块功能, 模块接口, 模块处理流程, 组成模块, 模块连接关系, 模块实现结构, 模块逻辑块描述, 测试要点]
+  - id: group_iface
+    folder: spec_doc
+    kind: group
+    stop_min: 4
+    stop_max: 4
+    chapters: [模块功能, 模块接口, 模块处理流程]
+  - id: group
+    folder: spec_doc
+    kind: group
+    stop_min: 5
+    chapters: [模块功能, 模块接口, 模块处理流程, 组成模块, 模块连接关系]
+# columns 只登记由 S6 闸门机械核对的表（端口/连接 + 需求追溯锚点表）；
+# 其余表（输入输出、步骤、寄存器、参数、组成模块等）按模板正文写作，不由 S6 校验。
+columns:
+  端口表: [名字, 方向, 位宽, 时钟域, 说明, 位宽依据]
+  连接表: [源, 目标, 位宽, 时钟域, 说明]
+  节点表: [数据节点, 对应步骤, 动态范围/精度需求, 定点格式, 量化误差/资源取舍, 来源]
+  分组表: [大子模块名, 分组理由, 组内模块关系, 覆盖的流程步骤, 来源]
+  模块清单: [所属大子模块, 模块名, 模块类型, 功能概述, 覆盖的流程步骤, 来源]
+  前后级表: [模块, 前级模块, 后级模块, 并行协作模块, 依赖的前置模块, 来源]
+  交互表: [源模块, 目标模块, 交互内容, 交互方式与节奏意图, 中间处理需求意图, 来源]
+  测试要点: [编号, 场景, 激励, 期望, 来源]

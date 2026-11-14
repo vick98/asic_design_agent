@@ -1,0 +1,58 @@
+/*========================================FILE_HEADER=====================================
+# Filename: pubip_mseq_cal_tc_cal_seg1_bound.sv
+# Author:   vick
+# email：   ykun@yk9811.com
+# 是否可综合：否
+#-----------------------------------------------------------------------------------------
+# VERSION      DATE           AUTHOR           DESCRIPTION
+#   1.0     2026-08-27        vick             initial
+#
+#-----------------------------------------------------------------------------------------
+# Description:
+        用例 cal_seg1_bound（对应规格书"段边界与打拍对齐测试：段 1 边界"）：
+        i_trans_num=0x6000（bit[14:13]=1，其余 0），仅使能段 1 两级 mseq_gen
+        （TRANS_NUM=16384/8192），验证段 1 消耗后 reg_trans_num_d1[12:0] 正确传递
+        （后续各段 en 全 0）
+#-----------------------------------------------------------------------------------------
+=========================================FILE_HEADER====================================*/
+
+`timescale 1ns/1ps
+`include "tb_define.svh"
+`include "pubip_mseq_cal_tb_pkg.sv"
+`ifndef U_PUBIP_MSEQ_CAL_TC_CAL_SEG1_BOUND
+`define U_PUBIP_MSEQ_CAL_TC_CAL_SEG1_BOUND
+import pubip_mseq_cal_tb_pkg::*;
+import tb_pkg::*;
+
+//----------- pubip_mseq_cal_tc_cal_seg1_bound ------------
+class pubip_mseq_cal_tc_cal_seg1_bound extends pubip_mseq_cal_tc_base;
+
+    function new(string name = "pubip_mseq_cal_tc_cal_seg1_bound");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        pubip_mseq_cal_item seq[$];
+        pubip_mseq_cal_item it;
+        int pb, pf;
+        reset_wait();
+        `TB_CASE_BEGIN("TC5: cal_seg1_bound");
+        m_env.m_scb.m_enable = 1'b1;
+        // 0x6000（bit[14:13]=1）调用 ×2（不同初始序列，调用间 3 拍无效间隙）
+        it = new("s1"); stim_item(it, 1'b1, 31'h1234_5678, 15'h6000); seq.push_back(it);
+        it = new("g0"); stim_item(it, 1'b0, '0, '0);                  seq.push_back(it);
+        it = new("g1"); stim_item(it, 1'b0, '0, '0);                  seq.push_back(it);
+        it = new("g2"); stim_item(it, 1'b0, '0, '0);                  seq.push_back(it);
+        it = new("s2"); stim_item(it, 1'b1, 31'h00DF_0001, 15'h6000); seq.push_back(it);
+        pb = m_env.m_scb.m_pass_cnt;
+        pf = m_env.m_scb.m_fail_cnt;
+        drive_seq(seq);
+        if (m_env.m_scb.m_pass_cnt - pb !== 2 || m_env.m_scb.m_fail_cnt !== pf) begin
+            `TB_ERROR($sformatf("cal_seg1_bound 自检失败 pass+%0d fail=%0d（期望 pass+2/fail 不变）",
+                                m_env.m_scb.m_pass_cnt - pb, m_env.m_scb.m_fail_cnt - pf));
+            m_env.m_scb.m_fail_cnt = m_env.m_scb.m_fail_cnt + 1;
+        end
+        `TB_CASE_END("TC5: cal_seg1_bound", m_env.m_scb.m_pass_cnt, m_env.m_scb.m_fail_cnt);
+    endtask
+endclass
+`endif //U_PUBIP_MSEQ_CAL_TC_CAL_SEG1_BOUND

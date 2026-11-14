@@ -1,0 +1,31 @@
+ 
+****************************************
+Report : area
+Design : pubip_counter
+Version: L-2016.03-SP1
+Date   : Thu Sep 17 21:28:24 2026
+****************************************
+
+Information: Updating design information... (UID-85)
+Library(s) Used:
+
+    yourtech_tt (File: /opt/synopsys/tech_lib/yourtech/STD/Synopsys/yourtech_tt.db)
+
+Number of ports:                           17
+Number of nets:                            37
+Number of cells:                           32
+Number of combinational cells:             28
+Number of sequential cells:                 4
+Number of macros/black boxes:               0
+Number of buf/inv:                          6
+Number of references:                       9
+
+Combinational area:                151.294001
+Buf/Inv area:                       27.234000
+Noncombinational area:             145.240005
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                   296.534006
+Total area:                 undefined
+1

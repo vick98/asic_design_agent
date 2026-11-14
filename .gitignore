@@ -1,0 +1,23 @@
+__pycache__/
+*.pyc
+.DS_Store
+**/work/
+**/dc/
+**/pt/
+**/lint/
+
+# 写权限台账是运行期协调记录（超时自动释放），不进版本库
+locks/
+
+# eda-mcp（toolchain/eda-mcp，E-0a）：编译产物与离线依赖不进版本库
+toolchain/eda-mcp/src/eda_mcp/native/fsdbq
+toolchain/eda-mcp/src/eda_mcp/native/*.o
+toolchain/eda-mcp/install/site/
+toolchain/eda-mcp/install/vendor/*.whl
+toolchain/eda-mcp/.uvcache/
+
+# 仿真/lint 运行期工作目录锁，不进版本库
+.run.lock*
+
+# 本地验证用虚拟环境（pyslang 可选依赖的测试环境）
+.venv/

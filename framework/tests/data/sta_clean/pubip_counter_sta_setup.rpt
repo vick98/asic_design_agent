@@ -1,0 +1,39 @@
+****************************************
+Report : timing
+	-path_type full
+	-delay_type max
+	-slack_lesser_than 1000000.00
+	-max_paths 10
+	-sort_by slack
+Design : pubip_counter
+Version: K-2015.06
+Date   : Thu Sep 17 21:28:31 2026
+****************************************
+
+  Startpoint: cnt_reg[3] (rising edge-triggered flip-flop clocked by clk_in)
+  Endpoint: cnt_reg[0] (rising edge-triggered flip-flop clocked by clk_in)
+  Path Group: clk_in
+  Path Type: max
+
+  Point                                          Incr       Path
+  ---------------------------------------------------------------
+  clock clk_in (rise edge)                       0.00       0.00
+  clock network delay (ideal)                    0.00       0.00
+  cnt_reg[3]/CK (DFFQXL)                         0.00       0.00 r
+  cnt_reg[3]/Q (DFFQXL)                          0.10       0.10 f
+  U12/Z (INVXL)                                  0.05       0.15 r
+  cnt_reg[0]/D (DFFQXL)                          0.00       0.15 f
+  data arrival time                                         0.15
+
+  clock clk_in (rise edge)                       0.20       0.20
+  clock network delay (ideal)                    0.00       0.20
+  clock uncertainty                             -0.02       0.18
+  library setup time                            -0.03       0.15
+  data required time                                        0.15
+  ---------------------------------------------------------------
+  data required time                                        0.15
+  data arrival time                                        -0.15
+  ---------------------------------------------------------------
+  slack (MET)                                               0.0523
+
+1

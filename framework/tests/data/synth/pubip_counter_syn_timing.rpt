@@ -1,0 +1,247 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 10
+Design : pubip_counter
+Version: L-2016.03-SP1
+Date   : Thu Sep 17 21:28:24 2026
+****************************************
+
+Operating Conditions: TYPICAL   Library: yourtech_tt
+Wire Load Model Mode: segmented
+
+  Startpoint: reg_counter_reg[1]
+              (rising edge-triggered flip-flop)
+  Endpoint: o_cnt_shift[5]
+            (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  pubip_counter      reference_area_20000  yourtech_tt
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  reg_counter_reg[1]/CK (FFDQRHDMX)        0.00       0.00 r
+  reg_counter_reg[1]/Q (FFDQRHDMX)         0.36       0.36 f
+  U37/Z (INVHDLX)                          0.43       0.79 r
+  U43/Z (NAND2HDUX)                        0.12       0.91 f
+  U44/Z (NOR2HDUX)                         0.18       1.09 r
+  o_cnt_shift[5] (out)                     0.00       1.09 r
+  data arrival time                                   1.09
+  -----------------------------------------------------------
+  (Path is unconstrained)
+
+
+  Startpoint: reg_counter_reg[1]
+              (rising edge-triggered flip-flop)
+  Endpoint: o_cnt_shift[1]
+            (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  pubip_counter      reference_area_20000  yourtech_tt
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  reg_counter_reg[1]/CK (FFDQRHDMX)        0.00       0.00 r
+  reg_counter_reg[1]/Q (FFDQRHDMX)         0.36       0.36 f
+  U37/Z (INVHDLX)                          0.43       0.79 r
+  U39/Z (NAND2HDUX)                        0.11       0.90 f
+  U40/Z (NOR2HDUX)                         0.17       1.07 r
+  o_cnt_shift[1] (out)                     0.00       1.07 r
+  data arrival time                                   1.07
+  -----------------------------------------------------------
+  (Path is unconstrained)
+
+
+  Startpoint: reg_counter_reg[0]
+              (rising edge-triggered flip-flop)
+  Endpoint: o_cnt_shift[6]
+            (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  pubip_counter      reference_area_20000  yourtech_tt
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  reg_counter_reg[0]/CK (FFDQRHDMX)        0.00       0.00 r
+  reg_counter_reg[0]/Q (FFDQRHDMX)         0.33       0.33 f
+  U32/Z (INVHDLX)                          0.34       0.67 r
+  U41/Z (NAND2HDUX)                        0.19       0.86 f
+  U45/Z (NOR2HDUX)                         0.20       1.06 r
+  o_cnt_shift[6] (out)                     0.00       1.06 r
+  data arrival time                                   1.06
+  -----------------------------------------------------------
+  (Path is unconstrained)
+
+
+  Startpoint: reg_counter_reg[0]
+              (rising edge-triggered flip-flop)
+  Endpoint: o_cnt_shift[4]
+            (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  pubip_counter      reference_area_20000  yourtech_tt
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  reg_counter_reg[0]/CK (FFDQRHDMX)        0.00       0.00 r
+  reg_counter_reg[0]/Q (FFDQRHDMX)         0.33       0.33 f
+  U32/Z (INVHDLX)                          0.34       0.67 r
+  U41/Z (NAND2HDUX)                        0.19       0.86 f
+  U42/Z (NOR2HDUX)                         0.20       1.06 r
+  o_cnt_shift[4] (out)                     0.00       1.06 r
+  data arrival time                                   1.06
+  -----------------------------------------------------------
+  (Path is unconstrained)
+
+
+  Startpoint: reg_counter_reg[0]
+              (rising edge-triggered flip-flop)
+  Endpoint: o_cnt_shift[2]
+            (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  pubip_counter      reference_area_20000  yourtech_tt
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  reg_counter_reg[0]/CK (FFDQRHDMX)        0.00       0.00 r
+  reg_counter_reg[0]/Q (FFDQRHDMX)         0.33       0.33 f
+  U32/Z (INVHDLX)                          0.34       0.67 r
+  U33/Z (NAND2HDUX)                        0.19       0.86 f
+  U38/Z (NOR2HDUX)                         0.19       1.05 r
+  o_cnt_shift[2] (out)                     0.00       1.05 r
+  data arrival time                                   1.05
+  -----------------------------------------------------------
+  (Path is unconstrained)
+
+
+  Startpoint: reg_counter_reg[0]
+              (rising edge-triggered flip-flop)
+  Endpoint: o_cnt_shift[0]
+            (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  pubip_counter      reference_area_20000  yourtech_tt
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  reg_counter_reg[0]/CK (FFDQRHDMX)        0.00       0.00 r
+  reg_counter_reg[0]/Q (FFDQRHDMX)         0.33       0.33 f
+  U32/Z (INVHDLX)                          0.34       0.67 r
+  U33/Z (NAND2HDUX)                        0.19       0.86 f
+  U34/Z (NOR3HDLX)                         0.17       1.03 r
+  o_cnt_shift[0] (out)                     0.00       1.03 r
+  data arrival time                                   1.03
+  -----------------------------------------------------------
+  (Path is unconstrained)
+
+
+  Startpoint: reg_counter_reg[2]
+              (rising edge-triggered flip-flop)
+  Endpoint: o_cnt_shift[7]
+            (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  pubip_counter      reference_area_20000  yourtech_tt
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  reg_counter_reg[2]/CK (FFDQRHDMX)        0.00       0.00 r
+  reg_counter_reg[2]/Q (FFDQRHDMX)         0.39       0.39 r
+  U29/Z (INVHDLX)                          0.18       0.57 f
+  U36/Z (NOR2HDUX)                         0.32       0.89 r
+  o_cnt_shift[7] (out)                     0.00       0.89 r
+  data arrival time                                   0.89
+  -----------------------------------------------------------
+  (Path is unconstrained)
+
+
+  Startpoint: reg_counter_reg[1]
+              (rising edge-triggered flip-flop)
+  Endpoint: o_cnt_shift[3]
+            (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  pubip_counter      reference_area_20000  yourtech_tt
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  reg_counter_reg[1]/CK (FFDQRHDMX)        0.00       0.00 r
+  reg_counter_reg[1]/Q (FFDQRHDMX)         0.39       0.39 r
+  U35/Z (NAND2HDUX)                        0.17       0.56 f
+  U54/Z (NOR2HDUX)                         0.31       0.87 r
+  o_cnt_shift[3] (out)                     0.00       0.87 r
+  data arrival time                                   0.87
+  -----------------------------------------------------------
+  (Path is unconstrained)
+
+
+  Startpoint: reg_counter_reg[1]
+              (rising edge-triggered flip-flop)
+  Endpoint: o_counter[1]
+            (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  pubip_counter      reference_area_20000  yourtech_tt
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  reg_counter_reg[1]/CK (FFDQRHDMX)        0.00       0.00 r
+  reg_counter_reg[1]/Q (FFDQRHDMX)         0.39       0.39 r
+  o_counter[1] (out)                       0.00       0.39 r
+  data arrival time                                   0.39
+  -----------------------------------------------------------
+  (Path is unconstrained)
+
+
+  Startpoint: reg_counter_reg[2]
+              (rising edge-triggered flip-flop)
+  Endpoint: o_counter[2]
+            (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  pubip_counter      reference_area_20000  yourtech_tt
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  reg_counter_reg[2]/CK (FFDQRHDMX)        0.00       0.00 r
+  reg_counter_reg[2]/Q (FFDQRHDMX)         0.39       0.39 r
+  o_counter[2] (out)                       0.00       0.39 r
+  data arrival time                                   0.39
+  -----------------------------------------------------------
+  (Path is unconstrained)
+
+
+1

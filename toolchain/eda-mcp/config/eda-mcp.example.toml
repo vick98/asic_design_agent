@@ -1,0 +1,71 @@
+# eda-mcp 配置示例
+# ---------------------------------------------------------------------------
+# 分层（后者覆盖前者）：
+#   ① 内置默认（按 $VERDI_HOME / $VCS_HOME / PATH 自动探测）
+#   ② /etc/eda-mcp/config.toml        （机器级）
+#   ③ ~/.config/eda-mcp/config.toml   （用户级，推荐 ← 通常只改这一份）
+#   ④ 环境变量 EDA_MCP_*              （最高优先级）
+#
+# 本包内**没有任何硬编码的服务器路径**；换到另一台 EDA 机时只需改本文件的
+# 路径类字段（或改用 EDA_MCP_* 环境变量）。
+#
+# 主机相关的值只写在剖面 `toolchain/profiles/<name>/profile.yaml`，启动时经
+# `EDA_MCP_*` 环境变量传入（本框架的实例即如此：`workspace_root` 取剖面的
+# `mirror_root`，由 EDA_MCP_WORKSPACE_ROOT 传入）；本文件里的 `/path/to/...`
+# 只是占位符，按需替换，不要写死某一台机器的绝对路径。
+
+[server]
+transport = "stdio"            # stdio | streamable-http
+host = "127.0.0.1"
+port = 8710
+
+[eda]
+# 服务器侧镜像根：所有工具只在此根下取文件（安全护栏）
+workspace_root = "/path/to/workspace"
+# 以下可用可执行文件名（走 PATH）或绝对路径
+vcs_bin      = "vcs"
+verdi_bin    = "verdi"
+vcd2fsdb_bin = "vcd2fsdb"
+nlint_bin    = "nLint"         # 注意大写 L
+dc_bin       = "dc_shell"
+pt_bin       = "pt_shell"
+
+[verdi]
+verdi_home = "/opt/synopsys/verdi"   # 缺省取 $VERDI_HOME
+extra_args = []
+import_timeout_s = 300               # 大设计 debImport 上限
+
+[fsdb]
+# FFR 波形读取（不需要 Verdi / License / X）
+# fsdbq 留空时按「包内 native/ → ~/.local/bin → PATH」顺序自动查找
+fsdbq_bin  = ""
+verdi_home = "/opt/synopsys/verdi"   # 定位 share/FsdbReader/{ffrAPI.h,linux64/libnffr.so}
+zlib       = "/lib/x86_64-linux-gnu/libz.so.1"   # 目标机可能无 zlib1g-dev
+max_changes = 2000                   # fsdb_wave 默认上限
+
+[xvfb]
+enabled  = true
+xvfb_bin = "/usr/bin/Xvfb"           # ⚠️ 必须绝对路径，勿用 verdi/bin/Xvfb（坏包装脚本）
+screen   = "1280x1024x24"
+display  = ""                        # 留空自动挑空闲编号
+
+[daemon]
+max_design_daemons = 2
+idle_ttl_s         = 1800
+start_timeout_s    = 120
+
+[jobs]
+cache_dir = "~/.cache/eda-mcp"
+max_jobs  = 200
+
+[security]
+allow_shell   = false                # shell_run 逃生舱，默认关闭
+allowed_roots = ["/path/to"]           # 路径白名单
+# 工具组开关：env|fsdb|wave|npi|flow|shell，逗号分隔或列表；缺省/留空 = 全开（上游现状）。
+# 也可用环境变量 EDA_MCP_ENABLED_GROUPS 覆盖（最高优先级）。
+#
+# asic_design_agent 框架的实例只启用观察面四组（观察面全开、作业面不开），
+# 作业组 flow 与逃生舱 shell 关闭——入账运行一律走 framework.py run：
+#   enabled_groups = ["env", "fsdb", "wave", "npi"]
+#   （即环境变量 EDA_MCP_ENABLED_GROUPS=env,fsdb,wave,npi）
+enabled_groups = []

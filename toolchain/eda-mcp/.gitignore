@@ -1,0 +1,24 @@
+# eda-mcp 忽略项
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# 安装期编译产物（native/fsdbq）
+src/eda_mcp/native/fsdbq
+
+# 本地配置与缓存
+config/eda-mcp.toml
+*.local.toml
+.cache/
+.uvcache/
+install/site/
+
+# 编辑器 / 系统
+.DS_Store
+*.swp
+.idea/
+.vscode/

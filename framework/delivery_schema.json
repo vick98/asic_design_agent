@@ -1,0 +1,9 @@
+{
+  "title": "delivery IR",
+  "schema_version": "2",
+  "required": ["schema_version", "sys_name", "ports", "memory", "modules", "module_details", "flow_nodes"],
+  "module_required": ["name", "kind", "spec_path", "ports", "connections", "logic_blocks", "tests", "memory", "fixed_point"],
+  "port_required": ["name", "direction", "width", "clock", "description"],
+  "memory_required": ["segments", "total_words", "peak_words", "addr_bits"],
+  "notes": "端口含时钟与说明；连接、逻辑块、结构化测试点、模块类型与规格书路径、存储峰值与地址位宽、流程节点定点。"
+}

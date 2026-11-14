@@ -1,0 +1,53 @@
+# 作者：vick 邮箱：ykun@yk9811.com
+
+id: example
+title: 示例 Synopsys 剖面（占位符，按你的 EDA 主机与工具链改）
+transport: ssh
+ssh_alias: your_eda_host
+mirror_root: /home/your_account/proj/asic_design_agent
+account: your_account
+tool_root: /opt/synopsys
+sync_excludes:
+  - .git/
+  - work/
+  - dc/
+  - pt/
+  - lint/
+tools:
+  sim: {available: true}
+  lint: {available: true}
+  coverage: {available: true}
+  synth: {available: true}
+  sta: {available: true}
+  # 跨时钟域检查与等价性检查：本机与远端都没有许可，只保留能力位扩展点，不接工具。
+  # 框架对 available: false 一律判 unavailable，走规则与裁决豁免路径。
+  cdc: {available: false}
+  lec: {available: false}
+# 期望的工具版本片段（能力 → 片段，实测版本串里含该片段即算一致）。
+# 空表 = 不核对；声明了却对不上（或没取到版本）只写进运行记录的 note，不阻断运行。
+expect_versions: {}
+coverage_defaults:
+  line: 80
+  cond: 70
+  fsm: 80
+  tgl: 60
+vcs:
+  bin: vcs
+  # -assert svaext：公共 IP 用小节里的 $error/$warning 做参数检查，
+  # 缺这个开关会报 "Using elaboration system tasks requires option -assert svaext"。
+  common: [-sverilog, -full64, -j, "4", -assert, svaext]
+  libext: +libext+.v+.sv
+  fsdb_extra: +nolibcell
+  fsdb_debug: -debug_access+all
+  fsdb_pli_tab: $VERDI_HOME/share/PLI/VCS/LINUX64/novas.tab
+  fsdb_pli_a: $VERDI_HOME/share/PLI/VCS/LINUX64/pli.a
+  fsdb_ldflags: '-LDFLAGS "-no-pie -Wl,--no-as-needed -fno-lto"'
+license: "27000@127.0.0.1"
+# eda-mcp 观察面：工作根不另写字段，固定取 mirror_root；
+# 剖面没有这一段时框架按"未配置"处理（不生成 .mcp.json、dbg 不可用）。
+# 前缀必须独立：不等于 ~/.local（会覆盖 ~/.local/bin 下其他项目在用的 eda-mcp），
+# 也不得位于 mirror_root 之内（rsync --delete 会删掉）。
+eda_mcp:
+  prefix: ~/.local/opt/asic_design_agent/eda-mcp
+  verdi_home: /opt/synopsys/verdi
+  groups: [env, fsdb, wave, npi]

@@ -1,0 +1,15 @@
+****************************************
+Report : timing
+	-path_type full
+	-delay_type max
+	-slack_lesser_than 1000000.00
+	-max_paths 10
+	-sort_by slack
+Design : pubip_counter
+Version: K-2015.06
+Date   : Thu Sep 17 21:28:31 2026
+****************************************
+
+No constrained paths.
+
+1

@@ -1,0 +1,16 @@
+****************************************
+Report : qor
+Design : pubip_counter
+Version: K-2015.06
+Date   : Thu Sep 17 21:28:31 2026
+****************************************
+
+  Timing Path Group clk_in
+  -----------------------------------
+  Levels of Logic:               3.00
+  Critical Path Length:          0.15
+  Critical Path Slack:           0.05
+  No. of Violating Paths:        0.00
+  -----------------------------------
+
+1

@@ -1,0 +1,45 @@
+@nLint rc file Version 1.0
+[pubip_sat_delivered_ip]
+Description="已交付公共 IP pub_code/pubip_sat.sv 的三条规则经裁决豁免（22213 恒定 0、22165 常量驱动、25003 未用信号），不改已交付 IP"
+Number=22213,22165,25003
+File=*pubip_sat.sv
+[tx_frame_obs_sel_group_mux]
+Description="tx 链叶模块观测口由 grp_tx 组级三选一负责，叶级不使用广播节点号 i_obs_sel；25003 经裁决豁免"
+Number=25003
+File=*tx_frame.sv
+Object="i_obs_sel"
+[tx_map_obs_sel_group_mux]
+Description="tx 链叶模块观测口由 grp_tx 组级三选一负责，叶级不使用广播节点号 i_obs_sel；25003 经裁决豁免"
+Number=25003
+File=*tx_map.sv
+Object="i_obs_sel"
+[tx_fir_obs_sel_group_mux]
+Description="tx 链叶模块观测口由 grp_tx 组级三选一负责，叶级不使用广播节点号 i_obs_sel；25003 经裁决豁免"
+Number=25003
+File=*tx_fir.sv
+Object="i_obs_sel"
+[rx_cfo_fft_sel_reserved_port]
+Description="i_cfg_fft_sel 为 D3-032 保留端口（sel=1..3 保留、非 0 一律按 0 处理，窗长/地址生成全为 65536 点编译期常量，故不进数据通路）；25003 经裁决豁免"
+Number=25003
+File=*rx_cfo.sv
+Object="i_cfg_fft_sel"
+[rx_fec_thr_nbits_nlint_quirk]
+Description="wir_thr_nbits 为 always_comb 内中间量、被 wir_thr_cw 引用，nLint J-2014 误报 no load；逻辑经 verilator 仿真验证；25003 经裁决豁免"
+Number=25003
+File=*rx_fec.sv
+Object="wir_thr_nbits"
+[rx_fec_thr_cw_nlint_quirk]
+Description="wir_thr_cw 由 i_cfg_preamble_en/frame_len 运行期驱动（非常量），nLint J-2014 在 always_comb 内误报 driven by a constant；逻辑经 verilator 仿真验证；22165 经裁决豁免"
+Number=22165
+File=*rx_fec.sv
+Object="wir_thr_cw"
+[tx_fir_mac_acc_nlint_quirk]
+Description="wir_acc 为 always_comb 内「常量初值 + for 循环 + f_mac 函数形 RHS」的多抽头满精度累加器；nLint J-2014 的 DFT 值分析误报 driven by a constant，同模块五种候选写法中本版是唯一 0 error 形态（参数化宽度转换报 22265、数组下标赋值报 25001、字面量宽度转换报 22213、展开标量报 25001）；累加口径与行2/行6 推导一致、verilator -Wall 本文件 0 warning；22165 经裁决豁免"
+Number=22165
+File=*tx_fir.sv
+Object="wir_acc"
+[tx_fir_mac_acc_q_nlint_quirk]
+Description="wir_acc_q 为 tx_fir Q 路同构累加器，误报原因与豁免依据同 wir_acc 条；22165 经裁决豁免"
+Number=22165
+File=*tx_fir.sv
+Object="wir_acc_q"

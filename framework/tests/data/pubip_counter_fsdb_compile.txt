@@ -1,0 +1,1 @@
+vcs -sverilog -full64 -j 4 -assert svaext -f ../../testbench/pubip_counter/pubip_counter_tb.f -y ../.. +libext+.v+.sv +nolibcell +define+DEBUG_CODE_EN +define+TB_DUMP_FSDB -debug_access+all -P $VERDI_HOME/share/PLI/VCS/LINUX64/novas.tab $VERDI_HOME/share/PLI/VCS/LINUX64/pli.a -LDFLAGS "-no-pie -Wl,--no-as-needed -fno-lto" -l compile.log

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "eda": {
+      "command": "ssh",
+      "args": [
+        "your_eda_host",
+        "EDA_MCP_WORKSPACE_ROOT=/home/your_account/proj/asic_design_agent EDA_MCP_ENABLED_GROUPS=env,fsdb,wave,npi ~/.local/opt/asic_design_agent/eda-mcp/bin/eda-mcp-server"
+      ]
+    }
+  }
+}

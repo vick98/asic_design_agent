@@ -1,0 +1,30 @@
+****************************************
+Report : qor
+Design : pubip_counter
+Version: K-2015.06
+Date   : Thu Sep 17 21:28:31 2026
+****************************************
+
+  Cell Count
+  ---------------------------------------------
+  Hierarchical Cell Count:                    0
+  Hierarchical Port Count:                    0
+  Leaf Cell Count:                           32
+  ---------------------------------------------
+
+
+  Area
+  ---------------------------------------------
+  Net Interconnect area:                   0.00
+  Total cell area:                       296.53
+  Design Area:                           296.53
+  ---------------------------------------------
+
+
+  Design Rule Violations
+  ---------------------------------------------
+  Total No. of Pins in Design:              102
+  Total DRC Cost:                          0.00
+  ---------------------------------------------
+
+1

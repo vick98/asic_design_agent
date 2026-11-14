@@ -1,0 +1,133 @@
+# 作者：vick 邮箱：ykun@yk9811.com
+
+roles:
+  - id: step0_info_input
+    title: 信息输入
+    description: 读取 info_input/，写信息总览，并给材料标可信度。
+    tools: [Read, Edit, Write, Bash]
+    stops: [1]
+    inputs: [info_input/]
+    outputs: ["info_input/{sys}_info_overview.md"]
+    must_read: [rules/roles/step0_info_input.md, rules/methodology.md, rules/templates/step0.md, rules/decision.md]
+    forbidden: [不写主机名, 不手算位宽, 不提前写流程或 RTL, 不改 info_input/ 原文]
+    return_format: 返回小结，列出产物路径、可信度分档和待点选项。
+  - id: step1_sys_flow
+    title: 处理流程
+    description: 写输入输出和步骤依赖，定点格式只粘贴工具输出。
+    tools: [Read, Edit, Write, Bash]
+    stops: [2]
+    inputs: ["info_input/{sys}_info_overview.md"]
+    outputs: ["flow_doc/{sys}_flow.md"]
+    must_read: [rules/roles/step1_sys_flow.md, rules/dsp.md, rules/templates/step1.md, rules/decision.md]
+    forbidden: [不手算位宽, 不写 RTL, 不做模块划分]
+    return_format: 返回小结，列出产物路径和待点选的定点或流程问题。
+  - id: step2_sys_plan
+    title: 系统方案
+    description: 写模块划分、前后级与交互，不写 RTL。
+    tools: [Read, Edit, Write, Bash]
+    stops: [3]
+    inputs: ["flow_doc/{sys}_flow.md"]
+    outputs: ["plan_doc/{sys}_plan.md"]
+    must_read: [rules/roles/step2_sys_plan.md, rules/templates/step2.md, rules/pubip.md, rules/decision.md]
+    forbidden: [不写 RTL, 不手算位宽, 不重写流程与定点化]
+    return_format: 返回小结，列出模块划分和待点选项。
+  - id: step3_sys_spec
+    title: 接口定义
+    description: 写子系统规格书和模块接口，推不出的位宽列为待点选。
+    tools: [Read, Edit, Write, Bash]
+    stops: [4]
+    inputs: ["plan_doc/{sys}_plan.md"]
+    outputs: ["spec_doc/{sys}_spec.md"]
+    must_read: [rules/roles/step3_sys_spec.md, rules/spec.md, rules/templates/sys_spec.md, rules/templates/module_spec.md, rules/decision.md]
+    forbidden: [不手算位宽, 不提前写逻辑块, 不重新划分模块]
+    return_format: 返回小结，列出接口产物和待点选的位宽。
+  - id: step3_module_spec
+    title: 结构与逻辑块
+    description: 按当前阶段只写结构或逻辑块，不提前写下一阶段。
+    tools: [Read, Edit, Write, Bash]
+    stops: [5, 6]
+    inputs: ["spec_doc/{sys}_spec.md"]
+    outputs: [spec_doc/]
+    must_read: [rules/roles/step3_module_spec.md, rules/dsp.md, rules/templates/module_spec.md, rules/decision.md]
+    forbidden: [不提前写下一阶段, 不手算位宽, 不改 group 组内清单]
+    return_format: 返回小结，标明本阶段写了结构还是逻辑块。
+  - id: spec_review
+    title: 规格审查
+    description: 按派工给出的停点审查行 1–6 的规格产物，只报告发现和建议，不改规格书。
+    tools: [Read, Bash]
+    stops: [1, 2, 3, 4, 5, 6]
+    inputs: [spec_doc/, flow_doc/, plan_doc/, info_input/]
+    outputs: [审查发现]
+    must_read: [rules/roles/spec_review.md, rules/review/spec.md, rules/steps.md, rules/templates/step0.md, rules/templates/step1.md, rules/templates/step2.md, rules/templates/module_spec.md, rules/templates/sys_spec.md]
+    forbidden: [不改规格书, 不手算位宽, 只跑 gate、fx、status 三类命令]
+    return_format: 返回报告五列表（发现编号 | 级别 | 位置 | 建议 | 处置），原样交主持者落盘。
+  - id: spec2rtl
+    title: 模块 RTL
+    description: 按模块规格书和交付 IR 写 RTL，端口位宽以 IR 为准。
+    tools: [Read, Edit, Write, Bash]
+    stops: [7]
+    inputs: [spec_doc/, digest]
+    outputs: [rtl/]
+    must_read: [rules/roles/spec2rtl.md, rules/coding.md, rules/pubip.md, rules/decision.md]
+    forbidden: [不手改未在规格书出现的端口, 不写主机名, 不写子模块内部逻辑以外的胶合]
+    return_format: 返回小结，列出模块文件和与 IR 不一致的端口。
+  - id: sys_spec2rtl
+    title: 顶层 wrapper
+    description: 例化、连接和胶合，连接核对通过后才送审。
+    tools: [Read, Edit, Write, Bash]
+    stops: [8]
+    inputs: [rtl/, "spec_doc/{sys}_spec.md"]
+    outputs: ["rtl/{sys}_top.sv"]
+    must_read: [rules/roles/sys_spec2rtl.md, rules/wrapper.md, rules/coding.md, rules/pubip.md]
+    forbidden: [连接未核对不得送审, 不写子模块内部逻辑]
+    return_format: 返回小结，列出未连接端口和胶合说明。
+  - id: rtl_review
+    title: RTL 审查
+    description: 只报告发现和建议，不改 RTL。
+    tools: [Read, Bash]
+    stops: [7, 8]
+    inputs: [rtl/]
+    outputs: [审查发现]
+    must_read: [rules/roles/rtl_review.md, rules/review/rtl.md, rules/coding.md]
+    forbidden: [不改 RTL, 只跑 gate、fx、status 三类命令]
+    return_format: 返回报告五列表（发现编号 | 级别 | 位置 | 建议 | 处置），原样交主持者落盘。
+  - id: tb_build
+    title: TB 构建
+    description: 按规则写框架式 testbench，用例结果行使用 RESULT。
+    tools: [Read, Edit, Write, Bash]
+    stops: [9]
+    inputs: [spec_doc/, rtl/]
+    outputs: [testbench/]
+    must_read: [rules/roles/tb_build.md, rules/review/tb.md, rules/tb.md, rules/sim.md]
+    forbidden: [不改被测 RTL 功能, 不自研时钟复位与统计]
+    return_format: 返回小结，列出用例名和 factory 注册情况。
+  - id: tb_review
+    title: TB 审查
+    description: 行 9 的独立审查插点，只报告发现和建议，不改 TB 与规格书。
+    tools: [Read, Bash]
+    stops: [9]
+    inputs: [testbench/, spec_doc/, rtl/]
+    outputs: [审查发现]
+    must_read: [rules/roles/tb_review.md, rules/review/tb.md, rules/tb.md, rules/templates/module_spec.md]
+    forbidden: [不改 TB, 不改规格书, 不手算位宽, 只跑 gate、fx、status 三类命令]
+    return_format: 返回报告五列表（发现编号 | 级别 | 位置 | 建议 | 处置），原样交主持者落盘。
+  - id: rtl_sim
+    title: 仿真
+    description: 用框架命令跑仿真；看节拍默认用 dbg 波形导出，失败时标明退回 tb、rtl 或 spec。
+    tools: [Read, Edit, Bash]
+    stops: [10]
+    inputs: [testbench/, rtl/]
+    outputs: [运行记录]
+    must_read: [rules/roles/rtl_sim.md, rules/sim.md, rules/debug.md, rules/waveform.md, rules/templates/debug_evidence.md, rules/pitfalls.md]
+    forbidden: [不抄整段日志进状态, 不手改 state.json, 不改 TB 与 RTL 功能, 默认用 dbg 波形导出不改 TB, 只能改 testbench/ 里 //DBG_BEGIN 与 //DBG_END 之间的探针块]
+    return_format: 返回小结，含运行结论、退回侧与回修定级（L0–L3，见 rules/debug.md）。
+  - id: midend_flow
+    title: 综合与时序
+    description: 起草并维护 SDC 约束，用框架命令跑综合和时序，签核只引用运行记录。
+    tools: [Read, Edit, Write, Bash]
+    stops: [11, 12]
+    inputs: [rtl/, 约束]
+    outputs: [约束文件, 签核记录]
+    must_read: [rules/roles/midend_flow.md, rules/syn.md, rules/decision.md]
+    forbidden: [不把日志数字抄进签核正文, 不改 RTL, 写域只限约束文件（SDC 等）]
+    return_format: 返回小结，引用运行记录编号和结论。
