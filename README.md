@@ -121,6 +121,8 @@ python3 script/framework.py selftest
 
 然后用支持读取仓库根 `AGENTS.md` 的 AI 编程宿主（本仓库在 **DeepSeek Harness** 下开发使用）打开 `asic_design_agent/`。
 
+**接 EDA 主机时，把 [toolchain/SETUP.md](toolchain/SETUP.md) 交给你的 AI agent**：那是写给 agent 看的环境配置作业书——agent 按它向你收集环境信息、建剖面、改造驱动，最后用 `doctor` 的逐项结论向你交底；纯本地使用（不接 EDA 工具）复制 `_template` 即可，详见该文第 0 步。
+
 ### 第 1 步：说一句"开始 demo"
 
 新会话对主持者说：
@@ -343,6 +345,7 @@ demo/
 
 ## 工具链与环境
 
+- **环境配置作业书：[toolchain/SETUP.md](toolchain/SETUP.md)（写给 AI agent 读）**——agent 按它收集信息、建剖面、改驱动、跑 `doctor` 验证链；换机器/换工具链也走同一份作业书。
 - 工具、主机、路径只写在 `toolchain/profiles/<剖面>/`；`toolchain/active` 一行指定当前剖面（仓库自带 `example`（占位符示例，按你的 EDA 主机与工具链改）与 `_template` 起手模板）。
 - 换机器/换工具链通常只改剖面配置与 `toolchain/active`，不用动规则与流程。
 - 远端 EDA 调试走 `eda-mcp`：`python3 script/framework.py eda-mcp install` 装到 EDA 主机，再用 `python3 script/framework.py doctor --mcp` 看结论；MCP 客户端配置见仓库根 `.mcp.json`。仓库内的 `toolchain/eda-mcp/` 是上游组件，保留其原始作者与许可信息。
