@@ -11,7 +11,7 @@
 
 ```text
 python3 -m pip install -r requirements.txt   # PyYAML；pyslang 可选（位宽解析增强，不装不阻断）
-python3 script/framework.py doctor           # 本地各项应通过；ssh 项失败不阻塞后续
+python3 script/framework.py doctor           # 本地各项应通过；ssh 一项默认跳过，属正常
 ```
 
 然后与人确认部署形态（二选一）：
@@ -94,7 +94,7 @@ echo <剖面id> > toolchain/active
 
 按顺序跑，前一级通过才跑下一级：
 
-1. `python3 script/framework.py doctor` —— ssh 项用 `ssh -o BatchMode=yes <别名> true` 的口径；失败先查 `~/.ssh/config` 与本机代理，再查账号密码方式（不支持交互输密码）。
+1. `python3 script/framework.py doctor --ssh` —— ssh 项用 `ssh -o BatchMode=yes <别名> true` 的口径；失败先查 `~/.ssh/config` 与本机代理，再查账号密码方式（不支持交互输密码）。不带 `--ssh` 的 `doctor` 会跳过 ssh，只验本地项。
 2. `python3 script/framework.py eda-mcp install` —— 同步镜像并把 eda-mcp 装到 EDA 主机、写 SOURCE_DIGEST（只有配了 `eda_mcp` 段才需要）。
 3. `python3 script/framework.py doctor --mcp` —— 远端观察面自检。
 4. `python3 script/framework.py hosts` —— 按剖面重新生成仓库根 `.mcp.json`（自动写，不手改）。
